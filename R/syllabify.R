@@ -33,8 +33,12 @@
 #' syllabify(c("M"))
 #' @export
 
-library(stringr)
-source("constants.R")
+library(purrr)
+library(tibble)
+library(dplyr)
+library(tidyr)
+#library(stringr)
+source("./R/constants.R")
 
 syllabify <- function(pron, alaska_rule = T){
   syll_list <- syllabify_list(pron, alaska_rule)
