@@ -33,6 +33,9 @@
 #' syllabify(c("M"))
 #' @export
 
+library(stringr)
+source("constants.R")
+
 syllabify <- function(pron, alaska_rule = T){
   syll_list <- syllabify_list(pron, alaska_rule)
   phone <- quo(phone)
@@ -115,27 +118,33 @@ syllabify_list <- function(pron, alaska_rule = TRUE){
       codas[[length(codas)]] <- pron[(vowel_indices[length(vowel_indices)] + 1):length(pron)]
     }
 
+    # modifying to lowercase 'r' for Klattese
+
     if (length(nuclei) > 1){
       for (i in seq_along(nuclei)[-1]){
         coda <- character(0)
         if (length(onsets[[i]]) > 1 &
-                    onsets[[i]][1] == "R"){
-          codas[[i - 1]] <- c(codas[[i - 1]], "R")
+                    onsets[[i]][1] == "r"){
+          codas[[i - 1]] <- c(codas[[i - 1]], "r")
           onsets[[i]] <- onsets[[i]][-1]
         }
 
+        # modifying to lowercase 'y' for Klattese
+
         if (length(onsets[[i]]) > 2){
-          if (onsets[[i]][length(onsets[[i]])] == "Y"){
-            nuclei[[i]] <- c("Y", nuclei[[i]])
+          if (onsets[[i]][length(onsets[[i]])] == "y"){
+            nuclei[[i]] <- c("y", nuclei[[i]])
             onsets[[i]] <- onsets[[i]][-length(onsets[[i]])]
           }
         }
 
+        # modifying to lowercase 's' for Klattese
+
         if (length(onsets[[i]]) > 1 &
             alaska_rule &
             nuclei[[i - 1]][length(nuclei[[i - 1]])] %in% SLAX &
-            onsets[[i]][1] == "S"){
-            coda <- c(coda, "S")
+            onsets[[i]][1] == "s"){
+            coda <- c(coda, "s")
             onsets[[i]] <- onsets[[i]][-1]
         }
 
